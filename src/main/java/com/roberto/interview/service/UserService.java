@@ -1,16 +1,19 @@
 package com.roberto.interview.service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
-import com.roberto.interview.models.UserProfile;
+import com.roberto.interview.dtos.user.UserProfileRequest;
+import com.roberto.interview.dtos.user.UserProfileDto;
 
 public interface UserService {
 
-    UserProfile getUserProfile(final UUID userId);
+  List<UserProfileDto> getAllUsers();
 
-    UserProfile addNewUser(final String name, final List<String> roles);
+  Optional<UserProfileDto> getUserProfileByUsername(final String username);
 
-    void removeUser(final UUID userId);
+  UserProfileDto addNewUser(final UserProfileRequest userProfileRequest);
+
+  void removeUser(final Long userId);
 
 }

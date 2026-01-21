@@ -1,40 +1,45 @@
 package com.roberto.interview;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.roberto.interview.models.UserProfile;
+import com.roberto.interview.dtos.task.TaskResponse;
 
 public class Context {
 
-    private static Context instance;
+  private static Context instance;
 
-    private final Map<UUID, UserProfile> userProfile = new ConcurrentHashMap<>();
+  private final Map<String, List<TaskResponse>> cache = new ConcurrentHashMap<>();
 
-    private Context() {
+  private Context() {
+  }
+
+  public static synchronized Context getInstance() {
+    if (instance == null) {
+      instance = new Context();
     }
+    return instance;
+  }
 
-    public static Context getInstance() {
-        if (instance == null) {
-            instance = new Context();
-        }
-        return instance;
-    }
+  public boolean areTheUserTasksStoredInTheCache(final String username) {
+    return cache.containsKey(username);
+  }
 
-    public UserProfile getUserProfile(final UUID userId) {
-        return userProfile.get(userId);
+  public List<TaskResponse> getTasksByUsernameInCache(final String username) {
+    if (!cache.containsKey(username)) {
+      return Collections.emptyList();
     }
+    return cache.get(username);
+  }
 
-    public UserProfile addUserProfile(final String name, List<String> roles) {
-        final UserProfile profile = UserProfile.create(name, roles);
-        this.userProfile.put(profile.getUuid(), profile);
-        return profile;
-    }
+  public void addTaskListToCache(final String username, final List<TaskResponse> tasks) {
+    cache.put(username, List.copyOf(tasks));
+  }
 
-    public void removeUserFromContext(final UUID userId) {
-        userProfile.remove(userId);
-    }
+  public void clearTasksByUsernameInCache(final String username) {
+    cache.remove(username);
+  }
 
 }

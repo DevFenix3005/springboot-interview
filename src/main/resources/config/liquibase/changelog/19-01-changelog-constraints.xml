@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-5.0.xsd"
+  objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+  <changeSet id="1768841111095-5" author="fenix" context="development">
+    <addUniqueConstraint columnNames="role_name" constraintName="uc_roles_role_name" tableName="roles"/>
+  </changeSet>
+  <changeSet id="1768841111095-6" author="fenix" context="development">
+    <addUniqueConstraint columnNames="username" constraintName="uc_user_profiles_username" tableName="user_profiles"/>
+  </changeSet>
+  <changeSet id="1768841111095-7" author="fenix" context="development">
+    <addForeignKeyConstraint baseColumnNames="user_profile_id" baseTableName="tasks"
+                             constraintName="FK_TASKS_ON_USER_PROFILE" referencedColumnNames="user_profile_id"
+                             referencedTableName="user_profiles"/>
+  </changeSet>
+  <changeSet id="1768841111095-8" author="fenix" context="development">
+    <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role" constraintName="fk_user_role_on_role"
+                             referencedColumnNames="role_id" referencedTableName="roles"/>
+  </changeSet>
+  <changeSet id="1768841111095-9" author="fenix" context="development">
+    <addForeignKeyConstraint baseColumnNames="user_profile_id" baseTableName="user_role"
+                             constraintName="fk_user_role_on_user_profile" referencedColumnNames="user_profile_id"
+                             referencedTableName="user_profiles"/>
+  </changeSet>
+
+</databaseChangeLog>

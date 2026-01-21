@@ -1,0 +1,19 @@
+# Use postgres/example user/password credentials
+
+services:
+
+  database:
+    image: postgres
+    volumes:
+        - ~\.volumes\interview-data:/var/lib/postgresql/18/docker
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=C4s1L34t1n4s!
+      - POSTGRES_DB=interviewdb
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"

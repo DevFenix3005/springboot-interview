@@ -1,4 +1,4 @@
-package com.roberto.interview.models;
+package com.roberto.interview.domain.models;
 
 public enum Priority {
     LOW,

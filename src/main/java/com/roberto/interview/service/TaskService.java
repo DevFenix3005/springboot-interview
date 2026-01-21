@@ -1,16 +1,14 @@
 package com.roberto.interview.service;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
-import com.roberto.interview.models.Task;
+import com.roberto.interview.dtos.task.TaskRequest;
+import com.roberto.interview.dtos.task.TaskResponse;
 
 public interface TaskService {
 
-    void save(Task t);
+  TaskResponse save(final TaskRequest taskRequest) throws UserPrincipalNotFoundException;
 
-    Optional<Task> findById(UUID id);
-
-    List<Task> findAll();
+  List<TaskResponse> findAll() throws UserPrincipalNotFoundException;
 }
