@@ -1,0 +1,15 @@
+@if (taskListEmpty()) {
+  <p>No tasks available.</p>
+} @else {
+  <mat-selection-list>
+    @for (task of tasks(); track task.id) {
+      <mat-list-option [selected]="task.completed">
+        <mat-icon matListItemIcon>task</mat-icon>
+        <div matListItemTitle>{{ task.title }}</div>
+        <div matListItemLine>Priority: {{ task.priority }}</div>
+        <div matListItemLine>{{ task.createdAt | date }}</div>
+      </mat-list-option>
+      <mat-divider></mat-divider>
+    }
+  </mat-selection-list>
+}

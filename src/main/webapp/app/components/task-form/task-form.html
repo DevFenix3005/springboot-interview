@@ -1,0 +1,24 @@
+<form class="row g-3" [formGroup]="taskFormGroup" (ngSubmit)="onSubmit()">
+  <div class="col-md-12">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title"/>
+    </mat-form-field>
+  </div>
+  <div class="col-md-12">
+    <mat-form-field appearance="outline">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority">
+        @for (priority of priorities; track priority) {
+          <mat-option [value]="priority.toUpperCase()">{{ priority }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-12">
+    <button matButton="elevated" type="submit" color="primary" [disabled]="taskFormGroup.invalid">
+      <mat-icon>add</mat-icon>
+      Add Task
+    </button>
+  </div>
+</form>

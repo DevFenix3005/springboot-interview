@@ -1,0 +1,24 @@
+<main class="form-signin w-100 m-auto">
+  <form [formGroup]="loginFormGroup" (ngSubmit)="onSubmit($event)">
+    <img class="mb-4" src="/content/img/interview-logo.png" alt="" width="230" height="89">
+    <hr>
+    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <div class="form-floating">
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username">
+      </mat-form-field>
+    </div>
+    <div class="form-floating">
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password">
+      </mat-form-field>
+    </div>
+    <button matButton="elevated" type="submit" color="primary" [disabled]="loginFormGroup.invalid">
+      <mat-icon>send</mat-icon>
+      Sign in
+    </button>
+    <p class="mt-5 mb-3 text-body-secondary">&copy; 2026</p>
+  </form>
+</main>

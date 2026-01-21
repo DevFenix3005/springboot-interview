@@ -1,50 +1,45 @@
 package com.roberto.interview.controller;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.roberto.interview.models.UserProfile;
-import com.roberto.interview.models.UserProfileRequest;
+import com.roberto.interview.dtos.user.UserProfileDto;
+import com.roberto.interview.dtos.user.UserProfileRequest;
+import com.roberto.interview.dtos.user.UserProfileResponse;
 import com.roberto.interview.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userDetailsService;
 
-    public UserController(final UserService userService) {
-        this.userService = userService;
-    }
+  public UserController(final UserService userDetailsService) {
+    this.userDetailsService = userDetailsService;
+  }
 
-    @GetMapping
-    public UserProfile getUserFromContext(@RequestHeader final Map<String, String> header) {
-        final String userID = header.get("userId");
-        return userService.getUserProfile(UUID.fromString(userID));
-    }
+  @GetMapping
+  public ResponseEntity<List<UserProfileResponse>> getAllUsers() {
+    final List<UserProfileDto> users = userDetailsService.getAllUsers();
+    final List<UserProfileResponse> response = users.stream()
+      .map(user -> new UserProfileResponse(user.id(), user.username()))
+      .toList();
+    return ResponseEntity.ok(response);
+  }
 
-    @PostMapping
-    public UserProfile addUserToContext(@RequestBody UserProfileRequest payload) {
-        final String name = payload.name();
-        final List<String> roles = payload.roles();
-        return userService.addNewUser(name, roles);
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> removeUserFromContext(@RequestHeader final Map<String, String> header) {
-        final String userID = header.get("userId");
-        userService.removeUser(UUID.fromString(userID));
-        return ResponseEntity.noContent().build();
-    }
+  @PostMapping
+  public ResponseEntity<UserProfileResponse> addUserToContext(@RequestBody UserProfileRequest payload) {
+    final UserProfileDto userProfile = userDetailsService.addNewUser(payload);
+    final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").build(userProfile.id());
+    return ResponseEntity.created(uri).body(new UserProfileResponse(userProfile.id(), userProfile.username()));
+  }
 
 }
