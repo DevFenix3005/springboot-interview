@@ -1,15 +1,12 @@
-# Use postgres/example user/password credentials
-
+# PostgreSQL service using credentials provided via the project root .env file
+# Load database credentials from the project root .env file.
+# .env file location is passing by compose command line argument: --env-file
+# Expected variables in .env: POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
 services:
-
   database:
     image: postgres
     volumes:
         - ~\.volumes\interview-data:/var/lib/postgresql/18/docker
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=C4s1L34t1n4s!
-      - POSTGRES_DB=interviewdb
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
       interval: 5s

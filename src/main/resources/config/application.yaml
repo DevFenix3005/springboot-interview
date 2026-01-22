@@ -3,9 +3,9 @@ spring:
     name: interview
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/interviewdb
-    username: postgres
-    password: C4s1L34t1n4s!
+    url: ${DATABASE_URL} # Required. No default is provided; the application will fail to start if not set. Expected format: jdbc:postgresql://host:port/database
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     type: com.zaxxer.hikari.HikariDataSource
   jpa:
     hibernate:
@@ -47,4 +47,4 @@ management:
           include: 'readinessState,db'
 security:
   jwt:
-    key: bXktc2VjcmV0LWtleS13aGljaC1zaG91bGQtYmUtY2hhbmdlZC1pbi1wcm9kdWN0aW9uLWFuZC1iZS1iYXNlNjQtZW5jb2RlZAo=
+    key: ${SECURITY_KEY} # SECURITY_KEY must be a base64-encoded secret key of at least 256 bits used to sign and verify JWTs.
