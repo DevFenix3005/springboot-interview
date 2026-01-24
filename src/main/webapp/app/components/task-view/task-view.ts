@@ -1,4 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatToolbarModule} from '@angular/material/toolbar';
 import {SubmitTaskResult, TaskForm} from '../task-form/task-form';
 import {TaskList} from '../task-list/task-list';
 import {TaskService} from '../../services/task.service';
@@ -9,6 +12,9 @@ import {TaskResponse} from '../../models/task-response';
 @Component({
   selector: 'app-task-view',
   imports: [
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule,
     TaskForm,
     TaskList
   ],

@@ -6,6 +6,10 @@ import com.roberto.interview.dtos.login.LoginResponse;
 
 public interface JwtTokenGeneratorService {
 
-  LoginResponse createToken(final Authentication authentication);
+  LoginResponse createAccessToken(final Authentication authentication);
+
+  LoginResponse createAccessToken(final String subject, final String authorities);
+
+  String createRefreshToken(Authentication authentication);
 
 }

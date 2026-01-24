@@ -34,12 +34,10 @@ export class Login {
     if (this.loginFormGroup.valid) {
       const loginRequest = this.loginFormGroup.value as LoginRequest;
       this.authService.login(loginRequest).subscribe({
-        next: loginResponse => {
-          const {token} = loginResponse;
-          localStorage.setItem('token', token);
+        next: () => {
           this.router.navigate(['/tasks']);
         },
-        error: error => {
+        error: () => {
           this.snackBar.open("Invalid username or password", 'Close', {duration: 3000});
         },
         complete: () => {

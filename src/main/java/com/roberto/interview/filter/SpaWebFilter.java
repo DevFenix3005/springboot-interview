@@ -2,6 +2,7 @@ package com.roberto.interview.filter;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
@@ -12,7 +13,10 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SpaWebFilter extends OncePerRequestFilter {
 
   @Override
-  protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
+  protected void doFilterInternal(
+    final HttpServletRequest request,
+    final @NonNull HttpServletResponse response,
+    final @NonNull FilterChain filterChain)
     throws ServletException, IOException {
 
     // Request URI includes the contextPath if any, removed it.

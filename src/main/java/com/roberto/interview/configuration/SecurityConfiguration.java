@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 
 import com.roberto.interview.filter.SpaWebFilter;
-import com.roberto.interview.security.AuthoritiesConstants;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
@@ -53,10 +52,11 @@ public class SecurityConfiguration {
           .requestMatchers("/*.ico", "/*.png", "/*.svg", "/*.webapp").permitAll()
           .requestMatchers("/app/**").permitAll()
           .requestMatchers("/content/**").permitAll()
-          .requestMatchers(HttpMethod.GET, "/api/auth").permitAll()
-          .requestMatchers(HttpMethod.POST, "/api/auth").permitAll()
-          .requestMatchers("/api/users").hasAuthority(AuthoritiesConstants.ADMIN)
-          .requestMatchers("/api/**").hasAuthority(AuthoritiesConstants.USER)
+          .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()
+          .requestMatchers("/api/users").hasAuthority(AppConstants.ADMIN)
+          .requestMatchers("/api/**").hasAuthority(AppConstants.USER)
           .requestMatchers("/management/health").permitAll()
           .requestMatchers("/management/health/**").permitAll()
           .requestMatchers("/management/info").permitAll()
