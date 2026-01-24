@@ -9,7 +9,7 @@ import org.springframework.boot.liquibase.autoconfigure.LiquibaseProperties;
 @EnableConfigurationProperties({ LiquibaseProperties.class })
 public class InterviewApplication {
 
-  static void main(String[] args) {
+  public static void main(String[] args) {
     SpringApplication.run(InterviewApplication.class, args);
   }
 

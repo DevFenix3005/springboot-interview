@@ -6,7 +6,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -15,7 +14,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
 import com.roberto.interview.management.SecurityMetersService;
-import com.roberto.interview.security.SecurityUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +26,7 @@ public class SecurityJwtConfiguration {
 
   @Bean
   public JwtDecoder jwtDecoder(final SecurityMetersService securityMetersService) {
-    final NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(getSecretKey()).macAlgorithm(SecurityUtils.JWT_ALGORITHM).build();
+    final NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(getSecretKey()).macAlgorithm(AppConstants.JWT_ALGORITHM).build();
     return token -> {
       try {
         return jwtDecoder.decode(token);
@@ -58,7 +56,7 @@ public class SecurityJwtConfiguration {
 
   private SecretKey getSecretKey() {
     byte[] keyBytes = Base64.from(jwtKey).decode();
-    return new SecretKeySpec(keyBytes, 0, keyBytes.length, SecurityUtils.JWT_ALGORITHM.getName());
+    return new SecretKeySpec(keyBytes, 0, keyBytes.length, AppConstants.JWT_ALGORITHM.getName());
   }
 
 }
