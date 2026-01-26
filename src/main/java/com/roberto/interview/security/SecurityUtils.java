@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import com.roberto.interview.domain.models.UserProfile;
@@ -15,7 +15,7 @@ import com.roberto.interview.domain.repository.UserProfileRepository;
 
 public class SecurityUtils {
 
-  public static final MacAlgorithm JWT_ALGORITHM = MacAlgorithm.HS512;
+  public static final SignatureAlgorithm JWT_ALGORITHM = SignatureAlgorithm.RS256;
 
   public static final String AUTHORITIES_CLAIM = "auth";
 

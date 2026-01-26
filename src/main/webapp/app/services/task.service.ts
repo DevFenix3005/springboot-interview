@@ -13,15 +13,11 @@ export class TaskService {
   private readonly http = inject(HttpClient);
 
   public addTasks(taskRequest: TaskRequest): Observable<TaskResponse> {
-    return this.http.post<TaskResponse>(this.taskUrl, taskRequest, {
-      headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`},
-    })
+    return this.http.post<TaskResponse>(this.taskUrl, taskRequest);
   }
 
   public getAllTasks(): Observable<TaskResponse[]> {
-    return this.http.get<TaskResponse[]>(this.taskUrl, {
-      headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`},
-    })
+    return this.http.get<TaskResponse[]>(this.taskUrl);
   }
 
 

@@ -55,6 +55,8 @@ public class SecurityConfiguration {
           .requestMatchers("/content/**").permitAll()
           .requestMatchers(HttpMethod.GET, "/api/auth").permitAll()
           .requestMatchers(HttpMethod.POST, "/api/auth").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()
           .requestMatchers("/api/users").hasAuthority(AuthoritiesConstants.ADMIN)
           .requestMatchers("/api/**").hasAuthority(AuthoritiesConstants.USER)
           .requestMatchers("/management/health").permitAll()
