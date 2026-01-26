@@ -60,7 +60,7 @@ public class JwtTokenGeneratorServiceImpl implements JwtTokenGeneratorService {
     final String tokenType) {
     final Instant now = Instant.now();
     final Instant exp = now.plusSeconds(timeToLiveSeconds);
-    return JwtClaimsSet.builder().issuer("self")
+    return JwtClaimsSet.builder().issuer(AppConstants.JWT_ISSUER)
       .issuedAt(now)
       .expiresAt(exp)
       .subject(subject)

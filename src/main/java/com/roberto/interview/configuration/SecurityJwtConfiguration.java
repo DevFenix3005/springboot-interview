@@ -13,8 +13,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
@@ -26,6 +30,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.util.Base64;
 import com.roberto.interview.management.SecurityMetersService;
+import com.roberto.interview.security.TokenTypeValidator;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,8 +60,37 @@ public class SecurityJwtConfiguration {
   }
 
   @Bean
-  public JwtDecoder jwtDecoder(final SecurityMetersService securityMetersService, final JWKSource<SecurityContext> jwkSource) {
+  public JwtDecoder accessTokenDecoder(final SecurityMetersService securityMetersService, final JWKSource<SecurityContext> jwkSource
+  ) {
+    return instrumentDecoder(
+      buildJwtDecoder(jwkSource, AppConstants.ACCESS_TOKEN_TYPE),
+      securityMetersService
+    );
+  }
+
+  @Bean
+  public JwtDecoder refreshTokenDecoder(final SecurityMetersService securityMetersService, final JWKSource<SecurityContext> jwkSource) {
+    return instrumentDecoder(
+      buildJwtDecoder(jwkSource, AppConstants.REFRESH_TOKEN_TYPE),
+      securityMetersService
+    );
+  }
+
+  @Bean
+  public JwtEncoder jwtEncoder(final JWKSource<SecurityContext> jwkSource) {
+    return new NimbusJwtEncoder(jwkSource);
+  }
+
+  private JwtDecoder buildJwtDecoder(final JWKSource<SecurityContext> jwkSource, final String tokenType) {
     final NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSource(jwkSource).build();
+    final OAuth2TokenValidator<Jwt> issuerValidator = JwtValidators.createDefaultWithIssuer(AppConstants.JWT_ISSUER);
+    final OAuth2TokenValidator<Jwt> tokenValidator = new TokenTypeValidator(tokenType);
+    final OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(issuerValidator, tokenValidator);
+    jwtDecoder.setJwtValidator(validator);
+    return jwtDecoder;
+  }
+
+  private JwtDecoder instrumentDecoder(final JwtDecoder jwtDecoder, final SecurityMetersService securityMetersService) {
     return token -> {
       try {
         return jwtDecoder.decode(token);
@@ -77,11 +111,6 @@ public class SecurityJwtConfiguration {
         throw e;
       }
     };
-  }
-
-  @Bean
-  public JwtEncoder jwtEncoder(final JWKSource<SecurityContext> jwkSource) {
-    return new NimbusJwtEncoder(jwkSource);
   }
 
   private RSAKey buildActiveKey() {
