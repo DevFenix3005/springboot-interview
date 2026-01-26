@@ -33,7 +33,7 @@ export class TaskForm {
     effect(() => {
       let {done} = this.taskSubmitStatus();
       if (done) {
-        this.taskFormGroup.reset({priority: this.priorities[1].toUpperCase()});
+        this.taskFormGroup.reset({priority: this.priorities[1].toUpperCase(), title: ''});
       }
     });
   }

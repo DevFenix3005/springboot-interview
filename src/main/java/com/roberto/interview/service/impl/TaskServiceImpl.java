@@ -57,6 +57,19 @@ public class TaskServiceImpl implements TaskService {
 
   }
 
+  @Override
+  public void deleteTaskById(final Long id) {
+    taskRepository.findById(id).ifPresent(taskRepository::delete);
+  }
+
+  @Override
+  public void completeTaskById(final Long id) {
+    taskRepository.findById(id).ifPresent(task -> {
+      task.setCompleted(true);
+      taskRepository.save(task);
+    });
+  }
+
   private TaskResponse mapToResponse(final Task task) {
     return new TaskResponse(task.getId(), task.getTitle(), task.getPriority().toString(), task.isCompleted(), task.getCreatedDate());
   }

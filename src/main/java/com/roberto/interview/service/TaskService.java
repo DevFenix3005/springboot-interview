@@ -11,4 +11,9 @@ public interface TaskService {
   TaskResponse save(final TaskRequest taskRequest) throws UserPrincipalNotFoundException;
 
   List<TaskResponse> findAll() throws UserPrincipalNotFoundException;
+
+  void deleteTaskById(final Long taskId);
+
+  void completeTaskById(final Long taskId);
+
 }

@@ -16,6 +16,8 @@ import com.roberto.interview.dtos.user.UserProfileRequest;
 import com.roberto.interview.dtos.user.UserProfileResponse;
 import com.roberto.interview.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -36,7 +38,7 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserProfileResponse> addUserToContext(@RequestBody UserProfileRequest payload) {
+  public ResponseEntity<UserProfileResponse> addUserToContext(@RequestBody @Valid UserProfileRequest payload) {
     final UserProfileDto userProfile = userDetailsService.addNewUser(payload);
     final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").build(userProfile.id());
     return ResponseEntity.created(uri).body(new UserProfileResponse(userProfile.id(), userProfile.username()));
