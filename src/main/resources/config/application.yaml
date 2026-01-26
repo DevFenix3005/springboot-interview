@@ -47,4 +47,12 @@ management:
           include: 'readinessState,db'
 security:
   jwt:
-    key: ${SECURITY_KEY} # SECURITY_KEY must be a base64-encoded secret key of at least 256 bits used to sign and verify JWTs.
+    # RSA key pair for JWT signing (private) and verification (public).
+    # Expected format for both keys: base64-encoded DER.
+    # - active-public: RSA public key in DER (X.509 SubjectPublicKeyInfo), then base64-encoded.
+    # - active-private: RSA private key in DER (PKCS#8), then base64-encoded.
+    # See the project's JWT key generation script (for example: scripts/generate-jwt-keys.sh)
+    # for instructions on generating keys in the correct format.
+    keys:
+      active-public: ${SECURITY_JWT_KEYS_ACTIVE_PUBLIC}
+      active-private: ${SECURITY_JWT_KEYS_ACTIVE_PRIVATE}

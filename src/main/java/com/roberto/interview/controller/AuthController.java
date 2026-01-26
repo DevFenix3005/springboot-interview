@@ -52,16 +52,8 @@ public class AuthController {
     final String refreshToken = jwtTokenGeneratorService.createRefreshToken(authentication);
     SecurityContextHolder.getContext().setAuthentication(authentication);
     final LoginResponse loginResponse = jwtTokenGeneratorService.createAccessToken(authentication);
-    final ResponseCookie responseCookie = ResponseCookie.from(AppConstants.REFRESH_COOKIE_NAME, refreshToken)
-      .httpOnly(true)
-      .secure(true)
-      .sameSite("Strict")
-      .path("/api/auth/refresh")
-      .maxAge(AppConstants.REFRESH_TOKEN_TTL_SECONDS)
-      .build();
-    return ResponseEntity.ok()
-      .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-      .body(loginResponse);
+    final String responseCookie = createRefreshCookie(refreshToken, AppConstants.REFRESH_TOKEN_TTL_SECONDS);
+    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie).body(loginResponse);
   }
 
   @PostMapping("/refresh")
@@ -86,22 +78,26 @@ public class AuthController {
 
     final String authorities = decodedToken.getClaimAsString(AppConstants.AUTHORITIES_CLAIM);
     final LoginResponse loginResponse = jwtTokenGeneratorService.createAccessToken(decodedToken.getSubject(), authorities);
-    return ResponseEntity.ok(loginResponse);
-
+    final String rotatedRefreshToken = jwtTokenGeneratorService.createRefreshToken(decodedToken.getSubject(), authorities);
+    final String responseCookie = createRefreshCookie(rotatedRefreshToken, AppConstants.REFRESH_TOKEN_TTL_SECONDS);
+    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie).body(loginResponse);
   }
 
   @PostMapping("/logout")
   public ResponseEntity<Void> logout() {
-    final ResponseCookie refreshCookie = ResponseCookie.from(AppConstants.REFRESH_COOKIE_NAME, "")
+    final String refreshCookie = createRefreshCookie("", 0);
+    return ResponseEntity.noContent().header(HttpHeaders.SET_COOKIE, refreshCookie).build();
+  }
+
+  private String createRefreshCookie(final String refreshTokenValue, final long ttlSeconds) {
+    return ResponseCookie.from(AppConstants.REFRESH_COOKIE_NAME, refreshTokenValue)
       .httpOnly(true)
       .secure(true)
       .sameSite("Strict")
       .path("/api/auth/refresh")
-      .maxAge(0)
-      .build();
-    return ResponseEntity.noContent()
-      .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-      .build();
+      .maxAge(ttlSeconds)
+      .build()
+      .toString();
   }
 
 }

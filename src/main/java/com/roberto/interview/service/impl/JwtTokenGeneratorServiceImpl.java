@@ -33,7 +33,8 @@ public class JwtTokenGeneratorServiceImpl implements JwtTokenGeneratorService {
 
   @Override
   public LoginResponse createAccessToken(final String subject, final String authorities) {
-    final JwtClaimsSet jwtClaimsSet = createJwtClaimSet(AppConstants.ACCESS_TOKEN_TTL_SECONDS, subject, authorities, AppConstants.ACCESS_TOKEN_TYPE);
+    final JwtClaimsSet jwtClaimsSet =
+      createJwtClaimSet(AppConstants.ACCESS_TOKEN_TTL_SECONDS, subject, authorities, AppConstants.ACCESS_TOKEN_TYPE);
     final JwsHeader jwsHeader = JwsHeader.with(AppConstants.JWT_ALGORITHM).type("JWT").build();
     final String token = jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, jwtClaimsSet)).getTokenValue();
     return new LoginResponse(token, jwtClaimsSet.getIssuedAt().toEpochMilli(), jwtClaimsSet.getExpiresAt().toEpochMilli());
@@ -41,9 +42,13 @@ public class JwtTokenGeneratorServiceImpl implements JwtTokenGeneratorService {
 
   @Override
   public String createRefreshToken(final Authentication authentication) {
-    final String authorities = authoritiesFromAuthentication(authentication);
+    return createRefreshToken(authentication.getName(), authoritiesFromAuthentication(authentication));
+  }
+
+  @Override
+  public String createRefreshToken(final String subject, final String authorities) {
     final JwtClaimsSet jwtClaimsSet =
-      createJwtClaimSet(AppConstants.REFRESH_TOKEN_TTL_SECONDS, authentication.getName(), authorities, AppConstants.REFRESH_TOKEN_TYPE);
+      createJwtClaimSet(AppConstants.REFRESH_TOKEN_TTL_SECONDS, subject, authorities, AppConstants.REFRESH_TOKEN_TYPE);
     final JwsHeader jwsHeader = JwsHeader.with(AppConstants.JWT_ALGORITHM).type("JWT").build();
     return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, jwtClaimsSet)).getTokenValue();
   }
