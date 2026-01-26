@@ -12,4 +12,6 @@ public interface JwtTokenGeneratorService {
 
   String createRefreshToken(Authentication authentication);
 
+  String createRefreshToken(final String subject, final String authorities);
+
 }

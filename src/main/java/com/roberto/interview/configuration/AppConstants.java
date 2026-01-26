@@ -1,6 +1,6 @@
 package com.roberto.interview.configuration;
 
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 
 public class AppConstants {
 
@@ -8,7 +8,7 @@ public class AppConstants {
 
   public static final String USER = "ROLE_USER";
 
-  public static final MacAlgorithm JWT_ALGORITHM = MacAlgorithm.HS512;
+  public static final SignatureAlgorithm JWT_ALGORITHM = SignatureAlgorithm.RS256;
 
   public static final String AUTHORITIES_CLAIM = "auth";
 
