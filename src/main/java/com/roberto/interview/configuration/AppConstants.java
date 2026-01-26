@@ -28,6 +28,8 @@ public class AppConstants {
 
   public static final String REFRESH_TOKEN_TYPE = "refresh";
 
+  public static final String JWT_ISSUER = "self";
+
   private AppConstants() {
     throw new IllegalStateException("Constants class");
   }

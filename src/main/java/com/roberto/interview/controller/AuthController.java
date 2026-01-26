@@ -2,6 +2,7 @@ package com.roberto.interview.controller;
 
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -37,8 +38,10 @@ public class AuthController {
 
   private final JwtDecoder jwtDecoder;
 
-  public AuthController(final AuthenticationManagerBuilder authenticationManagerBuilder,
-    final JwtTokenGeneratorService jwtTokenGeneratorService, final JwtDecoder jwtDecoder) {
+  public AuthController(
+    final AuthenticationManagerBuilder authenticationManagerBuilder,
+    final JwtTokenGeneratorService jwtTokenGeneratorService,
+    @Qualifier("refreshTokenDecoder") final JwtDecoder jwtDecoder) {
     this.authenticationManagerBuilder = authenticationManagerBuilder;
     this.jwtTokenGeneratorService = jwtTokenGeneratorService;
     this.jwtDecoder = jwtDecoder;
@@ -68,11 +71,6 @@ public class AuthController {
       decodedToken = jwtDecoder.decode(refreshToken);
     } catch (final Exception e) {
       log.error("Error decoding refresh token", e);
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
-    final String tokenType = decodedToken.getClaimAsString(AppConstants.TOKEN_TYPE_CLAIM);
-    if (!AppConstants.REFRESH_TOKEN_TYPE.equals(tokenType)) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 

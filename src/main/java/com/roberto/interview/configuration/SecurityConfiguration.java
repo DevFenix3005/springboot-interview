@@ -2,6 +2,7 @@ package com.roberto.interview.configuration;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,7 +32,8 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+  public SecurityFilterChain securityFilterChain(
+    final HttpSecurity http, @Qualifier("accessTokenDecoder") final JwtDecoder jwtDecoder) {
     http
       .cors(withDefaults())
       .csrf(AbstractHttpConfigurer::disable)
@@ -68,7 +71,7 @@ public class SecurityConfiguration {
           .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
           .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
       )
-      .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
+      .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder)));
     return http.build();
   }
 
