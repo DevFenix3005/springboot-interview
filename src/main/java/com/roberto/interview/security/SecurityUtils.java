@@ -8,28 +8,33 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
 
 import com.roberto.interview.domain.models.UserProfile;
 import com.roberto.interview.domain.repository.UserProfileRepository;
 
+@Component("securityUtils")
 public class SecurityUtils {
 
-  private SecurityUtils() {
+  private final UserProfileRepository userProfileRepository;
+
+  public SecurityUtils(final UserProfileRepository userProfileRepository) {
+    this.userProfileRepository = userProfileRepository;
   }
 
-  public static Optional<String> getCurrentUserLogin() {
+  public Optional<String> getCurrentUserLogin() {
     final SecurityContext securityContext = SecurityContextHolder.getContext();
     return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
   }
 
-  public static UserProfile getCurrentUserProfileLogin(final UserProfileRepository userProfileRepository)
+  public UserProfile getCurrentUserProfileLogin()
     throws UserPrincipalNotFoundException {
-    return SecurityUtils.getCurrentUserLogin()
+    return getCurrentUserLogin()
       .map(userProfileRepository::findByUsername)
       .orElseThrow(() -> new UserPrincipalNotFoundException("User not found"));
   }
 
-  private static String extractPrincipal(Authentication authentication) {
+  private String extractPrincipal(Authentication authentication) {
     if (authentication == null) {
       return null;
     } else if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {

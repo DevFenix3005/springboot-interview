@@ -4,7 +4,7 @@
 # Expected variables in .env: POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
 services:
   database:
-    image: postgres
+    image: postgres:18.1-alpine
     volumes:
         - ~\.volumes\interview-data:/var/lib/postgresql/18/docker
     healthcheck:
@@ -14,3 +14,12 @@ services:
       retries: 10
     ports:
       - "5432:5432"
+  cache-layer:
+    image: redis:8.4.0-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

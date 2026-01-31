@@ -10,8 +10,15 @@ import com.roberto.interview.configuration.AppConstants;
 
 @Component
 public class SpringSecurityAuditorAware implements AuditorAware<String> {
+
+  private final SecurityUtils securityUtils;
+
+  public SpringSecurityAuditorAware(final SecurityUtils securityUtils) {
+    this.securityUtils = securityUtils;
+  }
+
   @Override
   public @NullMarked Optional<String> getCurrentAuditor() {
-    return SecurityUtils.getCurrentUserLogin().or(() -> Optional.of(AppConstants.SYSTEM_ACCOUNT));
+    return securityUtils.getCurrentUserLogin().or(() -> Optional.of(AppConstants.SYSTEM_ACCOUNT));
   }
 }

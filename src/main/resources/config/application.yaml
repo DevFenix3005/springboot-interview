@@ -1,6 +1,11 @@
 spring:
   application:
     name: interview
+  cache:
+    cache-names: "tasks"
+    redis:
+      time-to-live: "10m"
+    type: redis
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DATABASE_URL} # Required. No default is provided; the application will fail to start if not set. Expected format: jdbc:postgresql://host:port/database
@@ -18,7 +23,7 @@ spring:
   liquibase:
     change-log: classpath:config/liquibase/master.xml
     contexts: development,add-data
-    drop-first: true
+    drop-first: false
   security:
     oauth2:
       resourceserver:
